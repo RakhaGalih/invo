@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-import '../common/customization.dart';
+import '../../common/customization.dart';
 
 class OtpPage extends StatefulWidget {
   const OtpPage({super.key});
