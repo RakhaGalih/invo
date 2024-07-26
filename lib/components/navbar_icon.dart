@@ -43,7 +43,7 @@ class NavBarIcon extends StatelessWidget {
           Text(
             title,
             style: kMediumTextStyle.copyWith(
-              fontSize: 10,
+              fontSize: 14,
               color: (isActive) ? kYellow : kGreyText,
             ),
           )

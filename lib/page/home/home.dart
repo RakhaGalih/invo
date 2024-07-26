@@ -34,38 +34,82 @@ class _HomeState extends State<Home> {
         const ProfilePage(),
       ];
       return Scaffold(
-        body: widgetOptions[data.selectedNavBar],
-        bottomNavigationBar: Container(
-          height: MediaQuery.of(context).padding.bottom + 80,
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(color: kGrey, width: 2.0),
-            ),
-          ),
-          child: Material(
-            color: kWhite,
-            child: InkWell(
-              onTap: () {},
-              child: SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(
-                          navIcons.length,
-                          (index) => NavBarIcon(
-                                isActive: data.selectedNavBar == index,
-                                index: index,
-                                color: kYellow,
-                                icon: navIcons[index].icon,
-                                activeIcon: navIcons[index].activeIcon!,
-                                title: navIcons[index].title,
-                              ))),
+        body: Stack(
+          children: [
+            widgetOptions[data.selectedNavBar],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: MediaQuery.of(context).padding.bottom + 82,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: kGrey, width: 2.0),
+                  ),
+                ),
+                child: Material(
+                  color: kWhite,
+                  child: InkWell(
+                    onTap: () {},
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: List.generate(
+                                navIcons.length,
+                                (index) => Padding(
+                                      padding: EdgeInsets.only(
+                                        right: (index == 0) ? 20 : 0,
+                                        left: (index == 0) ? 0 : 20,
+                                      ),
+                                      child: NavBarIcon(
+                                        isActive: data.selectedNavBar == index,
+                                        index: index,
+                                        color: kYellow,
+                                        icon: navIcons[index].icon,
+                                        activeIcon: navIcons[index].activeIcon!,
+                                        title: navIcons[index].title,
+                                      ),
+                                    ))),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      width: 80,
+                      height: 80,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: kYellow,
+                      ),
+                      child: const Icon(
+                        FluentIcons.barcode_scanner_20_filled,
+                        size: 36,
+                        color: kWhite,
+                      )),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    'Scan',
+                    style: kMediumTextStyle.copyWith(
+                        fontSize: 14, color: kGreyText),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.bottom,
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       );
     });

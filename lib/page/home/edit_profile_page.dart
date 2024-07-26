@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:invo/common/customTextField.dart';
 import 'package:invo/components/mainButton.dart';
 import 'package:invo/components/secondaryButton.dart';
 import 'package:invo/model/constant/constant.dart';
@@ -14,8 +15,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController? _usernameController;
-  TextEditingController? _teleponController;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _teleponController = TextEditingController();
   final ImageService _imageService = ImageService();
   final bool _showSpinner = false;
   final _formKey = GlobalKey<FormState>();
@@ -94,37 +95,22 @@ class _EditProfileState extends State<EditProfile> {
                     const SizedBox(
                       height: 44,
                     ),
-                    const Text(
-                      'Username',
-                      style: kSemiBoldTextStyle,
-                    ),
                     const SizedBox(
                       height: 12,
                     ),
-                    TextFormField(
-                      controller: _usernameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an username';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 20),
-                        filled: true,
-                        hintStyle: const TextStyle(color: kGrey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
-                          ),
-                        ),
-                        hintText: 'Username',
-                      ),
-                      style: kRegularTextStyle,
-                    ),
+                    CustomFormField(
+                        label: "Username",
+                        hintText: "Enter your username",
+                        controller: _usernameController,
+                        textInputType: TextInputType.name,
+                        isPassword: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an username';
+                          }
+                          return null;
+                        },
+                        isPhone: false),
                     const SizedBox(
                       height: 20,
                     ),
@@ -135,33 +121,23 @@ class _EditProfileState extends State<EditProfile> {
                     const SizedBox(
                       height: 12,
                     ),
-                    TextFormField(
-                      controller: _teleponController,
-                      validator: (value) {
-                        String pattern = r'^\+62\d{9,11}$';
-                        RegExp regex = RegExp(pattern);
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter phone number';
-                        } else if (!regex.hasMatch(value)) {
-                          return 'Please enter a valid phone number (+62xxxxxxxxxx)';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 20),
-                          filled: true,
-                          hintStyle: const TextStyle(color: kGrey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                          hintText: 'No telepon'),
-                      style: kRegularTextStyle,
-                    ),
+                    CustomFormField(
+                        label: "Cell phone number",
+                        hintText: "Enter your phone number",
+                        controller: _teleponController,
+                        textInputType: TextInputType.phone,
+                        isPassword: false,
+                        validator: (value) {
+                          String pattern = r'^\+62\d{9,11}$';
+                          RegExp regex = RegExp(pattern);
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter phone number';
+                          } else if (!regex.hasMatch(value)) {
+                            return 'Please enter a valid phone number (+62xxxxxxxxxx)';
+                          }
+                          return null;
+                        },
+                        isPhone: true),
                     const Spacer(),
                     SafeArea(
                       top: false,

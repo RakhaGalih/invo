@@ -104,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                               const SnackBar(content: Text('Processing Data')),
                             );
                           }
+                          Navigator.pushNamed(context, '/home');
                         },
                         child: Text(
                           "Sign In",

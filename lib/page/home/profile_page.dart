@@ -29,6 +29,10 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _logOut(BuildContext context) {
+    Navigator.pushReplacementNamed(context, '/stepper');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -36,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           SvgPicture.asset(
             'assets/svg/bg.svg',
-             width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width,
           ),
           Column(
             children: [
@@ -64,7 +68,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: kMediumTextStyle.copyWith(fontSize: 20, ),
+                style: kMediumTextStyle.copyWith(
+                  fontSize: 20,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -93,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       margin: const EdgeInsets.symmetric(vertical: 15),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: kGrey),
+                          border: Border.all(color: kGrey, width: 1)),
                       child: Column(
                         children: [
                           ProfileTile(title: 'Username', value: _username),
@@ -113,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       margin: const EdgeInsets.symmetric(vertical: 15),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: kGrey),
+                          border: Border.all(color: kGrey, width: 1)),
                       child: Column(
                         children: [
                           Row(
@@ -147,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              //logOut(context);
+                              _logOut(context);
                             },
                             child: const IconProfileTile(
                               title: 'Logout',
