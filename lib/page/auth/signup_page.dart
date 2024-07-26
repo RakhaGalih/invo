@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:invo/common/customTextField.dart';
 import 'package:invo/common/customization.dart';
 
-import '../common/input_validator.dart';
+import '../../common/input_validator.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -152,31 +152,7 @@ class _SignupPageState extends State<SignupPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: CustomSize.width(context, 0.42),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                ),
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconAssets.facebookIcon,
-                    SizedBox(width: CustomSize.width(context, 0.03)),
-                    Text(
-                      "Facebook",
-                      style:
-                          CustomFont.poppins(Colors.black, 14, FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            
             SizedBox(
               width: CustomSize.width(context, 0.42),
               child: ElevatedButton(

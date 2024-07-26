@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:invo/model/provider/data_model.dart';
+import 'package:invo/page/auth/signup_page.dart';
+import 'package:invo/page/auth/stepper_page.dart';
+import 'package:invo/page/home/edit_profile_page.dart';
+import 'package:invo/page/home/home.dart';
+import 'package:invo/page/home/profile_page.dart';
+import 'package:provider/provider.dart';
 
-import 'page/login_page.dart';
+import 'page/auth/login_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,8 +18,22 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginPage(),
+    return ChangeNotifierProvider<DataModel>(
+      create: (_) => DataModel(),
+      child: MaterialApp(
+        theme: ThemeData(
+            fontFamily: "Poppins",
+            primarySwatch: Colors.blue,
+            primaryColor: Colors.blue),
+        initialRoute: '/stepper',
+        routes: {
+          '/stepper': (context) => const StepperPage(),
+          '/login': (context) => const LoginPage(),
+          '/signUp': (context) => const SignupPage(),
+          '/home': (context) => const Home(),
+          '/edit': (context) => const EditProfile(),
+        },
+      ),
     );
   }
 }
