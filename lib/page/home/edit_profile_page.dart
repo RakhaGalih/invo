@@ -114,16 +114,9 @@ class _EditProfileState extends State<EditProfile> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
-                      'Telepon',
-                      style: kSemiBoldTextStyle,
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
                     CustomFormField(
-                        label: "Cell phone number",
-                        hintText: "Enter your phone number",
+                        label: "No Handphone",
+                        hintText: "Masukkan nomor telepon",
                         controller: _teleponController,
                         textInputType: TextInputType.phone,
                         isPassword: false,

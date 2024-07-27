@@ -21,9 +21,9 @@ class CustomFont {
 
 class IconAssets {
   static SvgPicture facebookIcon =
-      SvgPicture.asset("assets/icon/facebook-icon.svg");
+      SvgPicture.asset("assets/svg/facebook-icon.svg");
   static SvgPicture googleIcon =
-      SvgPicture.asset("assets/icon/google-icon.svg");
+      SvgPicture.asset("assets/svg/google-icon.svg");
 }
 
 class ImageAssets {

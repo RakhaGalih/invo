@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invo/model/provider/data_model.dart';
+import 'package:invo/page/auth/forgot_password_page.dart';
 import 'package:invo/page/auth/signup_page.dart';
 import 'package:invo/page/auth/stepper_page.dart';
 import 'package:invo/page/home/edit_profile_page.dart';
@@ -31,6 +32,7 @@ class MainApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/signUp': (context) => const SignupPage(),
           '/home': (context) => const Home(),
+          '/forgotPassword': (context) => const ForgotPasswordPage(),
           '/edit': (context) => const EditProfile(),
         },
       ),
