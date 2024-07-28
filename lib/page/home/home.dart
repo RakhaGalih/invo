@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).padding.bottom + 82,
+                height: MediaQuery.of(context).padding.bottom + 94,
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(color: kGrey, width: 2.0),
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
                     child: SafeArea(
                       top: false,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 12),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: List.generate(
@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
                         fontSize: 14, color: kGreyText),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).padding.bottom,
+                    height: MediaQuery.of(context).padding.bottom + 12,
                   )
                 ],
               ),
