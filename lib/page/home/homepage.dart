@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:invo/components/mainButton.dart';
 import 'package:invo/model/constant/constant.dart';
+import 'package:invo/page/home/features/add_product.dart';
+import 'package:invo/page/home/features/detail_produk.dart';
 import 'package:invo/service/service_component.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,6 +72,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                     hintText: 'Cari produk'),
                 onChanged: (value) async {}),
+            MainButton(
+                title: 'Tambah produk',
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddProductPage()));
+                }),
+                MainButton(
+                title: 'Detail Produk',
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DetailProdukPage()));
+                }),
           ],
         ),
       ),

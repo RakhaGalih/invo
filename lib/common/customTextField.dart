@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:invo/database/dummy/database.dart';
+import 'package:invo/model/constant/constant.dart';
 
 import '../model/dummy/phone_code_model.dart';
 import 'customization.dart';
 
 class CustomFormField extends StatefulWidget {
+  final int? maxLines;
   final String label;
   final String hintText;
   final TextEditingController controller;
@@ -13,6 +15,7 @@ class CustomFormField extends StatefulWidget {
   final String? Function(String?)? onChanged;
   final bool isPassword;
   final bool isPhone;
+  final bool isRequired;
   const CustomFormField(
       {super.key,
       required this.label,
@@ -21,8 +24,10 @@ class CustomFormField extends StatefulWidget {
       required this.textInputType,
       this.validator,
       this.onChanged,
+      this.maxLines,
       this.isPassword = false,
-      this.isPhone = false});
+      this.isPhone = false,
+      this.isRequired = false});
 
   @override
   State<CustomFormField> createState() => _CustomFormFieldState();
@@ -136,9 +141,19 @@ class _CustomFormFieldState extends State<CustomFormField> {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(widget.label,
-                    style: CustomFont.poppins(
-                        const Color(0xFF777777), 12, FontWeight.w500)),
+                child: Row(
+                  children: [
+                    Text(widget.label,
+                        style: CustomFont.poppins(
+                            const Color(0xFF777777), 12, FontWeight.w500)),
+                    if (widget.isRequired)
+                      Text(
+                        '*',
+                        style: kMediumTextStyle.copyWith(
+                            fontSize: 12, color: kRed),
+                      )
+                  ],
+                ),
               ),
               TextFormField(
                 controller: widget.controller,

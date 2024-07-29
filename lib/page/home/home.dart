@@ -4,6 +4,7 @@ import 'package:invo/components/navbar_icon.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/dummy/navicon.dart';
 import 'package:invo/model/provider/data_model.dart';
+import 'package:invo/page/home/features/add_product.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
