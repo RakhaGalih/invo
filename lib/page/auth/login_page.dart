@@ -65,9 +65,14 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: CustomSize.height(context, 0.03)),
                     Align(
                         alignment: Alignment.centerRight,
-                        child: Text("Forget password?",
-                            style: CustomFont.poppins(
-                                const Color(0xFFE1B064), 12, FontWeight.w700))),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/forgotPassword');
+                          },
+                          child: Text("Forget password?",
+                              style: CustomFont.poppins(const Color(0xFFE1B064),
+                                  12, FontWeight.w700)),
+                        )),
                     SizedBox(height: CustomSize.height(context, 0.05)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

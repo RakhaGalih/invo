@@ -66,4 +66,8 @@ class ImageService {
       print("No image selected");
     }
   }
+
+  void clearImage() {
+    selectedImage = null;
+  }
 }

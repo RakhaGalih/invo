@@ -4,6 +4,7 @@ import 'package:invo/components/navbar_icon.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/dummy/navicon.dart';
 import 'package:invo/model/provider/data_model.dart';
+import 'package:invo/page/home/features/add_product.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).padding.bottom + 82,
+                height: MediaQuery.of(context).padding.bottom + 94,
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(color: kGrey, width: 2.0),
@@ -53,7 +54,7 @@ class _HomeState extends State<Home> {
                     child: SafeArea(
                       top: false,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 12),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: List.generate(
@@ -104,7 +105,7 @@ class _HomeState extends State<Home> {
                         fontSize: 14, color: kGreyText),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).padding.bottom,
+                    height: MediaQuery.of(context).padding.bottom + 12,
                   )
                 ],
               ),

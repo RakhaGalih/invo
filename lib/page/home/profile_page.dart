@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:invo/components/profie_tile.dart';
 import 'package:invo/model/constant/constant.dart';
+import 'package:invo/page/auth/change_password.dart';
 import 'package:invo/service/service_component.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -143,10 +144,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ],
                           ),
-                          const IconProfileTile(
-                            title: 'Help & Support',
-                            color: kBlack,
-                            icon: Icons.support_agent_outlined,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ChangePassword(
+                                              isFromProfile: true)));
+                            },
+                            child: const IconProfileTile(
+                              title: 'Ganti Password',
+                              color: kBlack,
+                              icon: Icons.lock,
+                            ),
                           ),
                           const SizedBox(
                             height: 8,
