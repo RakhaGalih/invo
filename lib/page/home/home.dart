@@ -8,6 +8,8 @@ import 'package:invo/page/home/features/add_product.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_barcode_scanner/enum.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -84,18 +86,30 @@ class _HomeState extends State<Home> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                      width: 80,
-                      height: 80,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: kYellow,
-                      ),
-                      child: const Icon(
-                        FluentIcons.barcode_scanner_20_filled,
-                        size: 36,
-                        color: kWhite,
-                      )),
+                  GestureDetector(
+                    onTap: () async {
+                      var res = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const SimpleBarcodeScannerPage(
+                                    scanType: ScanType.barcode,
+                                    isShowFlashIcon: true),
+                          ));
+                    },
+                    child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: kYellow,
+                        ),
+                        child: const Icon(
+                          FluentIcons.barcode_scanner_20_filled,
+                          size: 36,
+                          color: kWhite,
+                        )),
+                  ),
                   const SizedBox(
                     height: 8,
                   ),
