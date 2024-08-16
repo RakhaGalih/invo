@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:invo/database/dummy/database.dart';
+import 'package:invo/database/dummy/database.dart';
 import 'package:invo/model/constant/constant.dart';
 
 import '../../../common/customization.dart';
+import '../../../model/dummy/product.dart';
 import 'detail_produk.dart';
 
 class ListProductPage extends StatefulWidget {
@@ -24,7 +27,6 @@ class _ListProductPageState extends State<ListProductPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search bar and filter icon
             Row(
               children: [
                 Expanded(
@@ -68,7 +70,7 @@ class _ListProductPageState extends State<ListProductPage> {
             const SizedBox(height: 24.0),
             Expanded(
               child: GridView.builder(
-                itemCount: products.length,
+                itemCount: DataDummy.products.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16.0,
@@ -76,7 +78,7 @@ class _ListProductPageState extends State<ListProductPage> {
                   childAspectRatio: 0.6,
                 ),
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = DataDummy.products[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -238,40 +240,3 @@ Widget filterChoice(String title) {
     ),
   );
 }
-
-// Product model
-class Product {
-  final String name;
-  final String imagePath;
-  final int soldCount;
-  final int stock;
-
-  Product({
-    required this.name,
-    required this.imagePath,
-    required this.soldCount,
-    required this.stock,
-  });
-}
-
-// Example products
-final List<Product> products = [
-  Product(
-    name: 'AFG Motor oil 350ml',
-    imagePath: 'assets/image/oil.png',
-    soldCount: 10,
-    stock: 22,
-  ),
-  Product(
-    name: 'Accelera 651 Sport TW 200',
-    imagePath: 'assets/image/ban.png',
-    soldCount: 10,
-    stock: 2,
-  ),
-  Product(
-    name: 'RR Motorcycle Exhaust 12V',
-    imagePath: 'assets/image/exhaust.png',
-    soldCount: 10,
-    stock: 0,
-  ),
-];
