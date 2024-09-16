@@ -4,9 +4,16 @@ import 'package:invo/components/profie_tile.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/page/auth/change_password.dart';
 import 'package:invo/service/service_component.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../database/db/userDB.dart';
+import '../../model/db/user_dbModel.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String? username;
+  final String? email;
+  final int? telepon;
+  const ProfilePage({super.key, this.username, this.email, this.telepon});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -14,10 +21,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool light = true;
-  String? _username;
-  String? _email;
-  String? _telepon;
   String? _image;
+  final userDatabase = UserDatabase.instance;
 
   Future<void> _navigateAndDisplayResult(BuildContext context) async {
     final result = await Navigator.pushNamed(context, '/edit');
@@ -65,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               Text(
-                _username ?? 'null',
+                widget.username ?? 'null',
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -103,9 +108,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           border: Border.all(color: kGrey, width: 1)),
                       child: Column(
                         children: [
-                          ProfileTile(title: 'Username', value: _username),
-                          ProfileTile(title: 'Email', value: _email),
-                          ProfileTile(title: 'No Telepon', value: _telepon),
+                          ProfileTile(
+                              title: 'Username', value: widget.username),
+                          ProfileTile(title: 'Email', value: widget.email),
+                          ProfileTile(
+                              title: 'No Telepon',
+                              value: widget.telepon.toString()),
                           const ProfileTile(
                               title: 'Password', value: '••••••••••'),
                         ],

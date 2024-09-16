@@ -41,13 +41,6 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                         style: CustomFont.poppins(
                             Colors.black, 12, FontWeight.w400)),
                     SizedBox(height: CustomSize.height(context, 0.05)),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Cell phone number",
-                          style: CustomFont.poppins(
-                              const Color(0xFF777777), 12, FontWeight.w500)),
-                    ),
-                    SizedBox(height: CustomSize.height(context, 0.01)),
                     CustomFormField(
                         label: "Cell phone number",
                         hintText: "Enter your phone number",

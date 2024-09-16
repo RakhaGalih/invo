@@ -6,7 +6,7 @@ import 'package:invo/components/mainButton.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/service/service_component.dart';
 
-import '../../../database/db.dart';
+import '../../../database/db/productDB.dart';
 import '../../../model/db/product_dbModel.dart';
 
 class AddProductPage extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/db/product_dbModel.dart';
 
 import '../../../common/customization.dart';
-import '../../../database/db.dart';
+import '../../../database/db/productDB.dart';
 import '../../../model/dummy/product.dart';
 import 'detail_produk.dart';
 

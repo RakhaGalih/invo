@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../model/db/product_dbModel.dart';
+import '../../model/db/product_dbModel.dart';
 
 class ProductDatabase {
   static final ProductDatabase instance = ProductDatabase._init();

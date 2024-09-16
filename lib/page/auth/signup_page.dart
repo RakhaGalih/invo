@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:invo/common/customTextField.dart';
 import 'package:invo/common/customization.dart';
+import 'package:invo/database/db/userDB.dart';
+import 'package:invo/model/db/user_dbModel.dart';
 
 import '../../common/input_validator.dart';
 
@@ -17,6 +19,8 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController userController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController passConfirmController = TextEditingController();
+  final userDatabase = UserDatabase.instance;
+  UserData? user;
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +126,17 @@ class _SignupPageState extends State<SignupPage> {
                             borderRadius: BorderRadius.circular(999),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
+                            user = UserData(
+                                username: userController.text,
+                                email: emailController.text,
+                                number: 085229643159,
+                                pass: passConfirmController.text);
+                            await userDatabase.create(user!);
+                            if (context.mounted) {
+                              Navigator.pushNamed(context, '/login');
+                            }
                           }
                         },
                         child: Text(
@@ -147,40 +157,9 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget button2Login() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            
-            SizedBox(
-              width: CustomSize.width(context, 0.42),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                ),
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconAssets.googleIcon,
-                    SizedBox(width: CustomSize.width(context, 0.03)),
-                    Text(
-                      "Google",
-                      style:
-                          CustomFont.poppins(Colors.black, 14, FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: CustomSize.height(context, 0.03)),
         SizedBox(
           width: CustomSize.width(context, 0.42),
           child: ElevatedButton(
@@ -195,10 +174,34 @@ class _SignupPageState extends State<SignupPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.call, color: Colors.black),
+                IconAssets.googleIcon,
                 SizedBox(width: CustomSize.width(context, 0.03)),
                 Text(
-                  "No. Phone",
+                  "Google",
+                  style: CustomFont.poppins(Colors.black, 14, FontWeight.w700),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: CustomSize.width(context, 0.42),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            onPressed: () {},
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconAssets.facebookIcon,
+                SizedBox(width: CustomSize.width(context, 0.03)),
+                Text(
+                  "Facebook",
                   style: CustomFont.poppins(Colors.black, 14, FontWeight.w700),
                 ),
               ],
