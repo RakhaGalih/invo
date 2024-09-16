@@ -8,8 +8,12 @@ import 'package:invo/page/home/features/add_product.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+
+import '../../database/db/userDB.dart';
+import '../../model/db/user_dbModel.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,6 +23,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final userDatabase = UserDatabase.instance;
+  String? _username;
+  String? _email;
+  int? _telepon;
   List<NavIcon> navIcons = [
     const NavIcon(
         icon: FluentIcons.home_20_regular,
@@ -29,12 +37,42 @@ class _HomeState extends State<Home> {
         activeIcon: FluentIcons.person_20_filled,
         title: 'Profile'),
   ];
+
+  Future<String?> getLoggedInUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('loggedInUserEmail');
+  }
+
+  Future<void> loadProfileData() async {
+    String? email = await getLoggedInUserEmail();
+
+    if (email != null) {
+      UserData? user = await userDatabase.getUserByEmail(email);
+
+      if (user != null) {
+        setState(() {
+          _username = user.username;
+          _email = user.email;
+          _telepon = user.number;
+        });
+      }
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfileData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DataModel>(builder: (context, data, child) {
       List<Widget> widgetOptions = <Widget>[
         const HomePage(),
-        const ProfilePage(),
+        ProfilePage(email: _email, username: _username, telepon: _telepon),
       ];
       return Scaffold(
         body: Stack(

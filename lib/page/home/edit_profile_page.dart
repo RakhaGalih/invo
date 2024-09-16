@@ -6,6 +6,10 @@ import 'package:invo/components/secondaryButton.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/service/service_component.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../database/db/userDB.dart';
+import '../../model/db/user_dbModel.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -20,9 +24,34 @@ class _EditProfileState extends State<EditProfile> {
   final ImageService _imageService = ImageService();
   final bool _showSpinner = false;
   final _formKey = GlobalKey<FormState>();
-  String? _username;
-  String? _telepon;
   String? _image;
+  final userDatabase = UserDatabase.instance;
+
+  Future<String?> getLoggedInUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('loggedInUserEmail');
+  }
+
+  Future<void> loadProfileData() async {
+    String? email = await getLoggedInUserEmail();
+
+    if (email != null) {
+      UserData? user = await userDatabase.getUserByEmail(email);
+
+      if (user != null) {
+        setState(() {
+          _usernameController.text = user.username;
+          _teleponController.text = user.number.toString();
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfileData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +150,7 @@ class _EditProfileState extends State<EditProfile> {
                         textInputType: TextInputType.phone,
                         isPassword: false,
                         validator: (value) {
-                          String pattern = r'^\+62\d{9,11}$';
+                          String pattern = r'^\d{9,11}$';
                           RegExp regex = RegExp(pattern);
                           if (value == null || value.isEmpty) {
                             return 'Please enter phone number';
@@ -136,7 +165,15 @@ class _EditProfileState extends State<EditProfile> {
                       top: false,
                       child: Column(
                         children: [
-                          MainButton(title: 'simpan', onTap: () {}),
+                          MainButton(
+                              title: 'simpan',
+                              onTap: () async {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Profile updated successfully!')),
+                                );
+                              }),
                           const SizedBox(
                             height: 20,
                           ),

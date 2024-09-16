@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:invo/common/customTextField.dart';
 import 'package:invo/common/customization.dart';
 import 'package:invo/page/auth/phone_login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/input_validator.dart';
+import '../../database/db/userDB.dart';
+import '../../model/db/user_dbModel.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +19,13 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  final userDatabase = UserDatabase.instance;
+  UserData? user;
+
+  Future<void> saveLoginInfo(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loggedInUserEmail', email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox(height: CustomSize.height(context, 0.05)),
+                    button2Login(),
                     SizedBox(height: CustomSize.height(context, 0.16)),
                     SizedBox(
                       width: double.infinity,
@@ -103,13 +114,32 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(999),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
+                            String email = emailController.text;
+                            String password = passController.text;
+                            UserData? user =
+                                await userDatabase.getUserByEmail(email);
+
+                            if (user != null) {
+                              if (user.pass == password) {
+                                await saveLoginInfo(user.email);
+                                if (context.mounted) {
+                                  Navigator.pushNamed(context, '/home');
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Wrong password')),
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Email not found')),
+                              );
+                            }
                           }
-                          Navigator.pushNamed(context, '/home');
                         },
                         child: Text(
                           "Sign In",

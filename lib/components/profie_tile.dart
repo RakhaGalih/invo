@@ -24,7 +24,7 @@ class ProfileTile extends StatelessWidget {
               value ?? '-',
               textAlign: TextAlign.end,
               style: kRegularTextStyle.copyWith(
-                  fontSize: 14, color: kGreyText),
+                  fontSize: 12, color: kGreyText),
             ),
           ),
         ],
