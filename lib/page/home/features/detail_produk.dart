@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:invo/common/customization.dart';
 import 'package:invo/components/detail_produk_label.dart';
 import 'package:invo/model/constant/constant.dart';
 
+import '../../../model/db/product_dbModel.dart';
+
 class DetailProdukPage extends StatefulWidget {
-  const DetailProdukPage({super.key});
+  final ProductList productList;
+  const DetailProdukPage({super.key, required this.productList});
 
   @override
   State<DetailProdukPage> createState() => _DetailProdukPageState();
@@ -13,13 +18,10 @@ class DetailProdukPage extends StatefulWidget {
 
 class _DetailProdukPageState extends State<DetailProdukPage> {
   int _selectedIndex = 0;
-  final List<String> _images = [
-    'assets/image/ban.jpg',
-    'assets/image/ban2.jpg',
-    'assets/image/ban3.jpg'
-  ];
+
   @override
   Widget build(BuildContext context) {
+    final List<String> images = [widget.productList.image];
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -30,16 +32,16 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
               child: Stack(
                 children: [
                   PageView.builder(
-                      itemCount: _images.length,
+                      itemCount: images.length,
                       onPageChanged: (index) {
                         setState(() {
                           _selectedIndex = index;
                         });
-                        print(_images[index]);
+                        print(images[index]);
                       },
                       itemBuilder: (context, index) {
-                        return Image.asset(
-                          _images[index],
+                        return Image.file(
+                          File(images[index]),
                           height: double.infinity,
                           fit: BoxFit.fitHeight,
                         );
@@ -65,7 +67,7 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
-                            _images.length,
+                            images.length,
                             (index) => AnimatedContainer(
                               margin: const EdgeInsets.only(right: 6),
                               height: 5,
@@ -115,38 +117,38 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Lokomotif',
+                    widget.productList.category,
                     style: kRegularTextStyle.copyWith(fontSize: 12),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    'Accelera 651 Sport TW 200',
+                    widget.productList.nameProduct,
                     style: kBoldTextStyle.copyWith(fontSize: 16),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    'Rp. 20.000',
+                    'Rp. ${widget.productList.price}',
                     style:
                         kBoldTextStyle.copyWith(fontSize: 16, color: kYellow),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const DetailProdukLabel(
+                  DetailProdukLabel(
                       label: 'Code: ',
-                      value: 'SE4602',
+                      value: widget.productList.codeProduct,
                       icon: FluentIcons.barcode_scanner_20_regular),
-                  const DetailProdukLabel(
+                  DetailProdukLabel(
                       label: 'Location: ',
-                      value: 'Bandung, Indonesia',
+                      value: widget.productList.location,
                       icon: FluentIcons.location_20_regular),
-                  const DetailProdukLabel(
+                  DetailProdukLabel(
                       label: 'Qty: ',
-                      value: '2',
+                      value: widget.productList.quantity.toString(),
                       icon: FluentIcons.box_20_regular),
                   const SizedBox(
                     height: 20,
@@ -159,7 +161,7 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                     height: 8,
                   ),
                   Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit. ',
+                    widget.productList.desc,
                     style: kRegularTextStyle.copyWith(fontSize: 14),
                   ),
                 ],

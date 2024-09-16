@@ -6,6 +6,9 @@ import 'package:invo/components/mainButton.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/service/service_component.dart';
 
+import '../../../database/db.dart';
+import '../../../model/db/product_dbModel.dart';
+
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
 
@@ -16,10 +19,13 @@ class AddProductPage extends StatefulWidget {
 class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _kategoriController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _kodeProdukController = TextEditingController();
   final TextEditingController _hargaController = TextEditingController();
   final TextEditingController _lokasiController = TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
+  final productDatabase = ProductDatabase.instance;
+  ProductList? product;
   final ImageService _imageService = ImageService();
   @override
   Widget build(BuildContext context) {
@@ -53,6 +59,17 @@ class _AddProductPageState extends State<AddProductPage> {
                   hintText: "Masukkan kategori produk",
                   controller: _kategoriController,
                   textInputType: TextInputType.name,
+                  isRequired: true,
+                  validator: (value) => InputValidator().emptyValidator(value),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                CustomFormField(
+                  label: "Jumlah Produk",
+                  hintText: "Masukkan jumlah produk",
+                  controller: _quantityController,
+                  textInputType: TextInputType.number,
                   isRequired: true,
                   validator: (value) => InputValidator().emptyValidator(value),
                 ),
@@ -175,7 +192,21 @@ class _AddProductPageState extends State<AddProductPage> {
                 const SizedBox(
                   height: 24,
                 ),
-                MainButton(title: 'Tambah Produk', onTap: () {})
+                MainButton(
+                    title: 'Tambah Produk',
+                    onTap: () async {
+                      product = ProductList(
+                          nameProduct: _namaController.text,
+                          category: _kategoriController.text,
+                          quantity: int.parse(_quantityController.text),
+                          codeProduct: _kodeProdukController.text,
+                          price: _hargaController.text,
+                          location: _lokasiController.text,
+                          desc: _deskripsiController.text,
+                          image: _imageService.selectedImage!.path);
+                      await productDatabase.create(product!);
+                      if (context.mounted) Navigator.pop(context);
+                    })
               ],
             ),
           ),
