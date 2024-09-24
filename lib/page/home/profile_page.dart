@@ -10,10 +10,16 @@ import '../../database/db/userDB.dart';
 import '../../model/db/user_dbModel.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String? username;
-  final String? email;
-  final int? telepon;
-  const ProfilePage({super.key, this.username, this.email, this.telepon});
+  final String name;
+  final String email;
+  final String username;
+  final String noTelp;
+  const ProfilePage(
+      {super.key,
+      required this.name,
+      required this.email,
+      required this.username,
+      required this.noTelp});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -22,7 +28,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool light = true;
   String? _image;
-  final userDatabase = UserDatabase.instance;
 
   Future<void> _navigateAndDisplayResult(BuildContext context) async {
     final result = await Navigator.pushNamed(context, '/edit');
@@ -70,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               Text(
-                widget.username ?? 'null',
+                widget.name,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -112,10 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               title: 'Username', value: widget.username),
                           ProfileTile(title: 'Email', value: widget.email),
                           ProfileTile(
-                              title: 'No Telepon',
-                              value: widget.telepon.toString()),
-                          const ProfileTile(
-                              title: 'Password', value: '••••••••••'),
+                              title: 'No Telepon', value: widget.noTelp),
                         ],
                       ),
                     ),

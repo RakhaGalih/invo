@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:invo/components/navbar_icon.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/dummy/navicon.dart';
 import 'package:invo/model/provider/data_model.dart';
-import 'package:invo/page/home/features/add_product.dart';
+import 'package:invo/model/userModel.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +15,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-import '../../database/db/userDB.dart';
-import '../../model/db/user_dbModel.dart';
+import '../../api_config/api.dart';
+import '../../components/alert_dialog.dart';
+import '../../components/loading.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,10 +27,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final userDatabase = UserDatabase.instance;
-  String? _username;
-  String? _email;
-  int? _telepon;
   List<NavIcon> navIcons = [
     const NavIcon(
         icon: FluentIcons.home_20_regular,
@@ -37,42 +37,64 @@ class _HomeState extends State<Home> {
         activeIcon: FluentIcons.person_20_filled,
         title: 'Profile'),
   ];
+  String name = "null";
+  String nameHome = "null";
+  String email = "-";
+  String username = "-";
+  String noTelp = "-";
+  bool _isLoad = false;
 
-  Future<String?> getLoggedInUserEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('loggedInUserEmail');
-  }
-
-  Future<void> loadProfileData() async {
-    String? email = await getLoggedInUserEmail();
-
-    if (email != null) {
-      UserData? user = await userDatabase.getUserByEmail(email);
-
-      if (user != null) {
-        setState(() {
-          _username = user.username;
-          _email = user.email;
-          _telepon = user.number;
-        });
-      }
-    } else {
-      Navigator.pushNamed(context, '/login');
+  Future getUser() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      UserModel model =
+          await Api().getUser(token: pref.getString('token_user').toString());
+      setState(() {
+        name = model.name;
+        nameHome = model.name;
+        email = model.email;
+        username = model.username;
+        noTelp = model.phoneNumber;
+        _isLoad = false;
+      });
+    } on HttpException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Error', 'Http Exception', 'error');
+    } on SocketException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Login Failed', 'No internet connection', 'error');
+    } on TimeoutException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(context, 'Timeout',
+          'There seems to be an internet connection error', 'warning');
     }
   }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    loadProfileData();
+    getUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<DataModel>(builder: (context, data, child) {
       List<Widget> widgetOptions = <Widget>[
-        const HomePage(),
-        ProfilePage(email: _email, username: _username, telepon: _telepon),
+        HomePage(name: nameHome),
+        ProfilePage(
+            name: name, email: email, username: username, noTelp: noTelp)
       ];
       return Scaffold(
         body: Stack(
@@ -161,7 +183,8 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
-            )
+            ),
+            _isLoad ? const LoadingAnimation() : Container(),
           ],
         ),
       );
