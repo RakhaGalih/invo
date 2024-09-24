@@ -1,15 +1,22 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:invo/components/loading.dart';
 import 'package:invo/database/dummy/database.dart';
 import 'package:invo/database/dummy/database.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/db/product_dbModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../api_config/api.dart';
+import '../../../api_config/url.dart';
 import '../../../common/customization.dart';
+import '../../../components/alert_dialog.dart';
 import '../../../database/db/productDB.dart';
 import '../../../model/dummy/product.dart';
+import '../../../model/productModel.dart';
 import 'detail_produk.dart';
 
 class ListProductPage extends StatefulWidget {
@@ -21,7 +28,48 @@ class ListProductPage extends StatefulWidget {
 
 class _ListProductPageState extends State<ListProductPage> {
   final TextEditingController _searchController = TextEditingController();
-  final productDatabase = ProductDatabase.instance;
+  bool _isLoad = true;
+  List<ProductData>? data;
+
+  Future getProduct() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      ProductModel model = await Api()
+          .getProduct(token: pref.getString('token_user').toString());
+      setState(() {
+        data = model.data;
+        _isLoad = false;
+      });
+    } on HttpException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Error', 'Http Exception', 'error');
+    } on SocketException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Data Failed', 'No internet connection', 'error');
+    } on TimeoutException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(context, 'Timeout',
+          'There seems to be an internet connection error', 'warning');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProduct();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,61 +78,46 @@ class _ListProductPageState extends State<ListProductPage> {
           title: Text('Product', style: kBoldTextStyle.copyWith(fontSize: 14))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _textFieldFilter(),
-            const SizedBox(height: 24.0),
-            FutureBuilder(
-                future: productDatabase.readAll(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Text("Error",
-                        style: kSemiBoldTextStyle.copyWith(
-                            fontSize: 15, color: Colors.black));
-                  }
-                  if (snapshot.hasData) {
-                    return Expanded(
-                      child: GridView.builder(
-                        itemCount: snapshot.data!.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                          childAspectRatio: 0.6,
-                        ),
-                        itemBuilder: (context, index) {
-                          final product = snapshot.data![index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailProdukPage(productList: product),
-                                ),
-                              );
-                            },
-                            child: _buildProductCard(product),
-                          );
-                        },
+        child: _isLoad
+            ? const LoadingAnimation()
+            : Column(
+                children: [
+                  _textFieldFilter(),
+                  const SizedBox(height: 24.0),
+                  Expanded(
+                    child: GridView.builder(
+                      itemCount: data!.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                        childAspectRatio: 0.6,
                       ),
-                    );
-                  }
-                  return Text('NA',
-                      style: kSemiBoldTextStyle.copyWith(
-                          fontSize: 15, color: Colors.black));
-                }),
-          ],
-        ),
+                      itemBuilder: (context, index) {
+                        final product = data![index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailProdukPage(productList: product),
+                              ),
+                            );
+                          },
+                          child: _buildProductCard(product),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
 
-  Widget _buildProductCard(ProductList product) {
+  Widget _buildProductCard(ProductData product) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -102,15 +135,15 @@ class _ListProductPageState extends State<ListProductPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.file(
-              File(product.image),
+            Image.network(
+              "${Url.baseUrl}/images/${product.img1}",
               height: 125.0,
               width: double.infinity,
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 12.0),
             Text(
-              product.nameProduct,
+              product.name,
               style: kRegularTextStyle.copyWith(fontSize: 14),
             ),
             const SizedBox(height: 4.0),

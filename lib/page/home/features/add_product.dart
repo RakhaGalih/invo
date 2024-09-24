@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:invo/common/customTextField.dart';
 import 'package:invo/common/input_validator.dart';
 import 'package:invo/components/form_header.dart';
@@ -24,9 +27,72 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _hargaController = TextEditingController();
   final TextEditingController _lokasiController = TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
-  final productDatabase = ProductDatabase.instance;
-  ProductList? product;
-  final ImageService _imageService = ImageService();
+  List<File> productImg = [];
+
+  Future _takePictureGallery(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 50,
+          preferredCameraDevice: CameraDevice.rear);
+
+      if (pickedImage != null) {
+        print("PATH: ${File(pickedImage.path)}");
+        print("TYPE: ${File(pickedImage.mimeType.toString())}");
+        print("NAME: ${File(pickedImage.name.toString())}");
+        setState(() {
+          productImg.add(File(pickedImage!.path));
+          print(productImg);
+        });
+      } else {
+        Navigator.pop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
+  Future _takePictureCamera(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 50,
+          preferredCameraDevice: CameraDevice.front);
+
+      if (pickedImage != null) {
+        print("PATH: ${File(pickedImage.path)}");
+        print("TYPE: ${File(pickedImage.mimeType.toString())}");
+        print("NAME: ${File(pickedImage.name.toString())}");
+        setState(() {
+          productImg.add(File(pickedImage!.path));
+          print(productImg);
+        });
+      } else {
+        Navigator.pop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -138,11 +204,10 @@ class _AddProductPageState extends State<AddProductPage> {
                 const SizedBox(
                   height: 12,
                 ),
-                (_imageService.selectedImage == null)
+                productImg.isEmpty
                     ? GestureDetector(
-                        onTap: () async {
-                          await _imageService.pickImage();
-                          setState(() {});
+                        onTap: () {
+                          showOptionImg();
                         },
                         child: Container(
                           height: 48,
@@ -157,61 +222,114 @@ class _AddProductPageState extends State<AddProductPage> {
                           ),
                         ),
                       )
-                    : GestureDetector(
-                        onTap: () {
-                          _imageService.clearImage();
-                          setState(() {});
-                        },
-                        child: SizedBox(
-                          width: 100,
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.file(
-                                  _imageService.selectedImage!,
-                                  width: 100,
-                                  fit: BoxFit.cover,
+                    : Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                showOptionImg();
+                              },
+                              child: Container(
+                                height: 48,
+                                width: 48,
+                                decoration: BoxDecoration(
+                                    color: kWhite,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border:
+                                        Border.all(color: kYellow, width: 2)),
+                                child: const Icon(
+                                  Icons.add,
+                                  color: kYellow,
                                 ),
                               ),
-                              const Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: EdgeInsets.all(12),
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 16,
-                                    color: kWhite,
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 150,
+                            width: 275,
+                            child: Scrollbar(
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: productImg.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      productImg.removeAt(index);
+                                      setState(() {});
+                                    },
+                                    child: SizedBox(
+                                      width: 100,
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: Image.file(
+                                              productImg[index],
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          const Align(
+                                            alignment: Alignment.topRight,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(12),
+                                              child: Icon(
+                                                Icons.delete,
+                                                size: 16,
+                                                color: kWhite,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                 const SizedBox(
                   height: 24,
                 ),
-                MainButton(
-                    title: 'Tambah Produk',
-                    onTap: () async {
-                      product = ProductList(
-                          nameProduct: _namaController.text,
-                          category: _kategoriController.text,
-                          quantity: int.parse(_quantityController.text),
-                          codeProduct: _kodeProdukController.text,
-                          price: _hargaController.text,
-                          location: _lokasiController.text,
-                          desc: _deskripsiController.text,
-                          image: _imageService.selectedImage!.path);
-                      await productDatabase.create(product!);
-                      if (context.mounted) Navigator.pop(context);
-                    })
+                MainButton(title: 'Tambah Produk', onTap: () async {})
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  showOptionImg() {
+    return showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.folder),
+                title: const Text('Galeri'),
+                onTap: () {
+                  _takePictureGallery(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  _takePictureCamera(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }

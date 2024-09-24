@@ -7,4 +7,5 @@ class Url {
   static String refresh = "/refresh";
   static String updateUser = "/users/";
   static String logout = "/logout";
+  static String product = "/products";
 }

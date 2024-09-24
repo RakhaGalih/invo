@@ -2,14 +2,16 @@ import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:invo/api_config/url.dart';
 import 'package:invo/common/customization.dart';
 import 'package:invo/components/detail_produk_label.dart';
 import 'package:invo/model/constant/constant.dart';
 
 import '../../../model/db/product_dbModel.dart';
+import '../../../model/productModel.dart';
 
 class DetailProdukPage extends StatefulWidget {
-  final ProductList productList;
+  final ProductData productList;
   const DetailProdukPage({super.key, required this.productList});
 
   @override
@@ -21,7 +23,11 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> images = [widget.productList.image];
+    final List<String> images = [
+      widget.productList.img1,
+      widget.productList.img2,
+      widget.productList.img3
+    ];
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -40,8 +46,8 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                         print(images[index]);
                       },
                       itemBuilder: (context, index) {
-                        return Image.file(
-                          File(images[index]),
+                        return Image.network(
+                          "${Url.baseUrl}/images/${images[index]}",
                           height: double.infinity,
                           fit: BoxFit.fitHeight,
                         );
@@ -124,7 +130,7 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                     height: 8,
                   ),
                   Text(
-                    widget.productList.nameProduct,
+                    widget.productList.name,
                     style: kBoldTextStyle.copyWith(fontSize: 16),
                   ),
                   const SizedBox(
@@ -140,7 +146,7 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                   ),
                   DetailProdukLabel(
                       label: 'Code: ',
-                      value: widget.productList.codeProduct,
+                      value: widget.productList.productCode,
                       icon: FluentIcons.barcode_scanner_20_regular),
                   DetailProdukLabel(
                       label: 'Location: ',
@@ -161,7 +167,7 @@ class _DetailProdukPageState extends State<DetailProdukPage> {
                     height: 8,
                   ),
                   Text(
-                    widget.productList.desc,
+                    widget.productList.description,
                     style: kRegularTextStyle.copyWith(fontSize: 14),
                   ),
                 ],

@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:invo/api_config/url.dart';
 import 'package:invo/model/logoutModel.dart';
 import 'package:invo/model/logoutModel.dart';
+import 'package:invo/model/productModel.dart';
+import 'package:invo/model/productModel.dart';
 import 'package:invo/model/refreshModel.dart';
 import 'package:invo/model/refreshModel.dart';
 import 'package:invo/model/registModel.dart';
@@ -178,6 +180,25 @@ class Api {
     print("RES LOGOUT: ${res.body}");
     if (res.statusCode == 200) {
       return LogoutModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<ProductModel> getProduct({required String token}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL PRODUCTS: ${Url.baseUrl}${Url.product}");
+    final res = await http
+        .get(Uri.parse(Url.baseUrl + Url.product), headers: headers)
+        .timeout(const Duration(seconds: 20));
+    print("STATUS CODE(PRODUCTS): ${res.statusCode}");
+    print("RES PRODUCTS: ${res.body}");
+    if (res.statusCode == 200) {
+      return ProductModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');
