@@ -133,8 +133,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> refresh() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     try {
-      RefreshModel model =
-          await Api().doRefresh(token: pref.getString('token_user').toString());
+      RefreshModel model = await Api().doRefresh();
       setState(() {
         pref.setString('token_user', model.accessToken);
       });
