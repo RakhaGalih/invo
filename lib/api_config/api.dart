@@ -123,28 +123,36 @@ class Api {
     }
   }
 
-  Future<UpdateUserModel> updateUserPicture(
-      {required String token, required File file}) async {
+  Future<UpdateUserModel> updateUser(
+      {required String token,
+      required File file,
+      required String phoneNumber,
+      required String officeAddress}) async {
     var mimeType = lookupMimeType(file.path);
     var bytes = await File.fromUri(Uri.parse(file.path)).readAsBytes();
     Map<String, String> headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
+    final body = {
+      "phone_number": phoneNumber,
+      "office_address": officeAddress,
+    };
     http.MultipartRequest request =
         http.MultipartRequest("PATCH", Uri.parse(Url.baseUrl + Url.updateUser));
-    print("URL UPDATE IMAGE: ${Url.baseUrl}${Url.updateUser}");
+    print("URL UPDATE: ${Url.baseUrl}${Url.updateUser}");
     http.MultipartFile multipartFile = await http.MultipartFile.fromBytes(
         'png', bytes,
         filename: basename(file.path),
         contentType: MediaType.parse(mimeType.toString()));
+    request.fields.addAll(body);
     request.headers.addAll(headers);
     request.files.add(multipartFile);
     var streamedResponse = await request.send();
     var res = await http.Response.fromStream(streamedResponse);
-    print("STATUS CODE(UPDATE IMAGE): ${res.statusCode}");
-    print("RES UPDATE IMAGE: ${res.body}");
-    if (res.statusCode == 201) {
+    print("STATUS CODE(UPDATE): ${res.statusCode}");
+    print("RES UPDATE: ${res.body}");
+    if (res.statusCode == 200) {
       return UpdateUserModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);

@@ -34,7 +34,8 @@ class UserModel {
         username: json["username"],
         phoneNumber: json["phone_number"] ?? "-",
         officeAddress: json["office_address"] ?? "-",
-        img: json["img"] ?? "-",
+        img: json["img"] ??
+            "https://firebasestorage.googleapis.com/v0/b/evolphy-cfb2e.appspot.com/o/Rectangle%206.png?alt=media&token=2b96ff1a-6c58-478d-8c4d-482cf3ba02ef",
       );
 
   Map<String, dynamic> toJson() => {

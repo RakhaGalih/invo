@@ -19,7 +19,8 @@ import 'features/list_product.dart';
 
 class HomePage extends StatefulWidget {
   final String name;
-  const HomePage({super.key, required this.name});
+  final String imageProfile;
+  const HomePage({super.key, required this.name, required this.imageProfile});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,7 +28,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
-  String? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         MyNetworkImage(
-                          imageURL: _image ??
-                              'https://firebasestorage.googleapis.com/v0/b/evolphy-cfb2e.appspot.com/o/Rectangle%206.png?alt=media&token=2b96ff1a-6c58-478d-8c4d-482cf3ba02ef',
+                          imageURL: widget.imageProfile,
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,

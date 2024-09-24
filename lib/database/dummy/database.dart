@@ -6,10 +6,10 @@ import '../../model/dummy/report_product_chart.dart';
 
 class DataDummy {
   static List<PhoneCode> countries = [
-    PhoneCode(name: "Indonesia", code: "+62", flag: ImageAssets.IND),
-    PhoneCode(name: "Japan", code: "+81", flag: ImageAssets.JAP),
-    PhoneCode(name: "South Africa", code: "+27", flag: ImageAssets.AFC),
-    PhoneCode(name: "America", code: "+1", flag: ImageAssets.USA),
+    PhoneCode(name: "Jakarta", code: "+62", flag: ImageAssets.IND),
+    PhoneCode(name: "Tokyo", code: "+81", flag: ImageAssets.JAP),
+    PhoneCode(name: "Cape Town", code: "+27", flag: ImageAssets.AFC),
+    PhoneCode(name: "Washington D.C", code: "+1", flag: ImageAssets.USA),
   ];
 
   static List<ChartData> chartData = [

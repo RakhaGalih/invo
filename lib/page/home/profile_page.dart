@@ -22,12 +22,14 @@ class ProfilePage extends StatefulWidget {
   final String email;
   final String username;
   final String noTelp;
+  final String imageProfile;
   const ProfilePage(
       {super.key,
       required this.name,
       required this.email,
       required this.username,
-      required this.noTelp});
+      required this.noTelp,
+      required this.imageProfile});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -35,13 +37,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool light = true;
-  String? _image;
   bool _isLoad = false;
 
   Future<void> _navigateAndDisplayResult(BuildContext context) async {
     final result = await Navigator.pushNamed(context, '/edit');
-
-    // Check what was returned and act accordingly
     if (result != null) {
       if (mounted) {
         setState(() {});
@@ -50,11 +49,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future _logOut() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     try {
       setState(() {
         _isLoad = true;
       });
       LogoutModel model = await Api().logout();
+      await pref.clear();
       setState(() {
         _isLoad = false;
       });
@@ -109,8 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           radius: 60,
                           backgroundColor: kGrey,
                           child: MyNetworkImage(
-                            imageURL: _image ??
-                                'https://firebasestorage.googleapis.com/v0/b/evolphy-cfb2e.appspot.com/o/Rectangle%206.png?alt=media&token=2b96ff1a-6c58-478d-8c4d-482cf3ba02ef',
+                            imageURL: widget.imageProfile,
                             width: 120,
                             height: 120,
                             fit: BoxFit.cover,

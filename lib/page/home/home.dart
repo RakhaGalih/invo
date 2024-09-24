@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:invo/api_config/url.dart';
 import 'package:invo/components/navbar_icon.dart';
 import 'package:invo/model/constant/constant.dart';
 import 'package:invo/model/dummy/navicon.dart';
@@ -42,6 +43,8 @@ class _HomeState extends State<Home> {
   String email = "-";
   String username = "-";
   String noTelp = "-";
+  String imageProfile =
+      "https://firebasestorage.googleapis.com/v0/b/evolphy-cfb2e.appspot.com/o/Rectangle%206.png?alt=media&token=2b96ff1a-6c58-478d-8c4d-482cf3ba02ef";
   bool _isLoad = false;
 
   Future getUser() async {
@@ -58,6 +61,8 @@ class _HomeState extends State<Home> {
         email = model.email;
         username = model.username;
         noTelp = model.phoneNumber;
+        imageProfile = "${Url.baseUrl}/images/${model.img}";
+        print("IMAGE PROFILE: ${Url.baseUrl}/images/${model.img}");
         _isLoad = false;
       });
     } on HttpException {
@@ -92,9 +97,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Consumer<DataModel>(builder: (context, data, child) {
       List<Widget> widgetOptions = <Widget>[
-        HomePage(name: nameHome),
+        HomePage(name: nameHome, imageProfile: imageProfile),
         ProfilePage(
-            name: name, email: email, username: username, noTelp: noTelp)
+            name: name,
+            email: email,
+            username: username,
+            noTelp: noTelp,
+            imageProfile: imageProfile)
       ];
       return Scaffold(
         body: Stack(
