@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:invo/api_config/url.dart';
+import 'package:invo/model/addProductModel.dart';
 import 'package:invo/model/logoutModel.dart';
 import 'package:invo/model/logoutModel.dart';
 import 'package:invo/model/productModel.dart';
@@ -202,6 +203,67 @@ class Api {
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<AddProductModel> addProduct(
+      {required String name,
+      required String category,
+      required String quantity,
+      required String price,
+      required String productCode,
+      required String location,
+      required String description,
+      required List<File> productImg,
+      required String token}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    };
+
+    final body = {
+      "name": name,
+      "category": category,
+      "quantity": quantity,
+      "price": price,
+      "product_code": productCode,
+      "location": location,
+      "description": description,
+    };
+
+    var request =
+        http.MultipartRequest("POST", Uri.parse(Url.baseUrl + Url.product));
+    print("URL ADD PRODUCT: ${Url.baseUrl}${Url.product}");
+
+    request.fields.addAll(body);
+    request.headers.addAll(headers);
+
+    for (var file in productImg) {
+      print("UPLOAD");
+      var mimeType = lookupMimeType(file.path);
+      var bytes = await file.readAsBytes();
+
+      http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+        'img',
+        bytes,
+        filename: basename(file.path),
+        contentType: MediaType.parse(mimeType.toString()),
+      );
+      request.files.add(multipartFile);
+      print("SELESAI UPLOAD");
+    }
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    print("STATUS CODE(ADD PRODUCT): ${response.statusCode}");
+    print("RES ADD PRODUCT: ${response.body}");
+
+    if (response.statusCode == 201) {
+      return AddProductModel.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.statusCode);
+      throw HttpException('request error code ${response.statusCode}');
     }
   }
 }
