@@ -147,7 +147,7 @@ class Api {
         http.MultipartRequest("PATCH", Uri.parse(Url.baseUrl + Url.updateUser));
     print("URL UPDATE: ${Url.baseUrl}${Url.updateUser}");
     http.MultipartFile multipartFile = await http.MultipartFile.fromBytes(
-        'png', bytes,
+        'img', bytes,
         filename: basename(file.path),
         contentType: MediaType.parse(mimeType.toString()));
     request.fields.addAll(body);

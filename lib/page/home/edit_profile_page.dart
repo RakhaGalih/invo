@@ -22,6 +22,7 @@ import '../../database/db/userDB.dart';
 import '../../database/dummy/database.dart';
 import '../../model/db/user_dbModel.dart';
 import '../../model/dummy/phone_code_model.dart';
+import '../../model/refreshModel.dart';
 import '../../model/userModel.dart';
 
 class EditProfile extends StatefulWidget {
@@ -41,8 +42,8 @@ class _EditProfileState extends State<EditProfile> {
       "https://firebasestorage.googleapis.com/v0/b/evolphy-cfb2e.appspot.com/o/Rectangle%206.png?alt=media&token=2b96ff1a-6c58-478d-8c4d-482cf3ba02ef";
   bool _isLoad = false;
   PhoneCode selectedCountry =
-      DataDummy.countries.firstWhere((country) => country.code == "+62");
-  String? selectedOffice;
+      DataDummy.countries.firstWhere((country) => country.office == "Jakarta");
+  String selectedOffice = "Jakarta";
 
   Future _imageService(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
@@ -84,15 +85,19 @@ class _EditProfileState extends State<EditProfile> {
       });
       UserModel model =
           await Api().getUser(token: pref.getString('token_user').toString());
-      if (model.username != "-" && model.phoneNumber != "-") {
+      if (model.username != "-" &&
+          model.phoneNumber != "-" &&
+          model.officeAddress != "-") {
         setState(() {
           _usernameController.text = model.username;
           _teleponController.text = model.phoneNumber;
+          selectedOffice = model.officeAddress;
+          selectedCountry = DataDummy.countries
+              .firstWhere((country) => country.office == model.officeAddress);
         });
       }
       setState(() {
         _image = "${Url.baseUrl}/images/${model.img}";
-        print("IMAGE PROFILE: ${Url.baseUrl}/images/${model.img}");
         _isLoad = false;
       });
     } on HttpException {
@@ -122,10 +127,12 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         _isLoad = true;
       });
+      RefreshModel refresh = await Api().doRefresh();
+      await pref.setString('token_user', refresh.accessToken);
       UpdateUserModel model = await Api().updateUser(
           token: pref.getString('token_user').toString(),
           phoneNumber: _teleponController.text,
-          officeAddress: selectedOffice!,
+          officeAddress: selectedOffice,
           file: profileImg!);
       setState(() {
         _isLoad = false;
@@ -294,9 +301,9 @@ class _EditProfileState extends State<EditProfile> {
                                     onChanged: (PhoneCode? newValue) {
                                       setState(() {
                                         selectedCountry = newValue!;
-                                        selectedOffice = newValue.name;
+                                        selectedOffice = newValue.office;
                                         print(
-                                            "OFFICE SELECTED: ${selectedOffice!}");
+                                            "OFFICE SELECTED: $selectedOffice");
                                       });
                                     },
                                   ),

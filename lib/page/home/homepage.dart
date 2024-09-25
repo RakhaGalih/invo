@@ -13,8 +13,10 @@ import 'package:invo/page/home/features/report_product.dart';
 import 'package:invo/service/service_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api_config/api.dart';
+import '../../api_config/url.dart';
 import '../../components/alert_dialog.dart';
 import '../../components/loading.dart';
+import '../../model/userModel.dart';
 import 'features/list_product.dart';
 
 class HomePage extends StatefulWidget {
@@ -132,9 +134,9 @@ class _HomePageState extends State<HomePage> {
   Future<void> refresh() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     try {
-      RefreshModel model = await Api().doRefresh();
+      RefreshModel refresh = await Api().doRefresh();
       setState(() {
-        pref.setString('token_user', model.accessToken);
+        pref.setString('token_user', refresh.accessToken);
       });
     } on HttpException {
       return CustomDialog.showAlertDialog(

@@ -59,13 +59,12 @@ class _HomeState extends State<Home> {
       UserModel model =
           await Api().getUser(token: pref.getString('token_user').toString());
       setState(() {
-        name = model.name;
-        nameHome = model.name;
+        name = model.username;
+        nameHome = model.username;
         email = model.email;
         username = model.username;
         noTelp = model.phoneNumber;
         imageProfile = "${Url.baseUrl}/images/${model.img}";
-        print("IMAGE PROFILE: ${Url.baseUrl}/images/${model.img}");
         _isLoad = false;
       });
     } on HttpException {
