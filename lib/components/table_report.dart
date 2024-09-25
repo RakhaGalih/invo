@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:invo/model/constant/constant.dart';
 
 import '../model/dummy/report_product_chart.dart';
+import '../model/reportModel.dart';
 
 class TableReportComponent extends StatefulWidget {
-  final List<ProductData> data;
+  final List<ProductReport> data;
   const TableReportComponent({super.key, required this.data});
 
   @override
@@ -75,7 +76,7 @@ class _TableReportComponentState extends State<TableReportComponent> {
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(border: Border.all()),
-            child: Text(widget.data[index].product.toString(),
+            child: Text(widget.data[index].name.toString(),
                 textAlign: TextAlign.left,
                 style: kMediumTextStyle.copyWith(fontSize: 12)),
           ),
@@ -84,7 +85,7 @@ class _TableReportComponentState extends State<TableReportComponent> {
             child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(border: Border.all()),
-          child: Text(widget.data[index].stockIn.toString(),
+          child: Text(widget.data[index].reports[0].stockIn.toString(),
               textAlign: TextAlign.left,
               style: kMediumTextStyle.copyWith(fontSize: 12)),
         )),
@@ -92,7 +93,7 @@ class _TableReportComponentState extends State<TableReportComponent> {
             child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(border: Border.all()),
-          child: Text(widget.data[index].stockOut.toString(),
+          child: Text(widget.data[index].reports[0].stockOut.toString(),
               textAlign: TextAlign.left,
               style: kMediumTextStyle.copyWith(fontSize: 12)),
         )),
@@ -100,7 +101,7 @@ class _TableReportComponentState extends State<TableReportComponent> {
             child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(border: Border.all()),
-          child: Text(widget.data[index].revenue,
+          child: Text(widget.data[index].reports[0].revenue.toString(),
               textAlign: TextAlign.left,
               style: kMediumTextStyle.copyWith(fontSize: 12)),
         )),

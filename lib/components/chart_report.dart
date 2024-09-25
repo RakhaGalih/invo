@@ -3,10 +3,17 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../database/dummy/database.dart';
 import '../model/dummy/report_product_chart.dart';
+import '../model/reportModel.dart';
 
-class ChartReportComponent extends StatelessWidget {
-  const ChartReportComponent({super.key});
+class ChartReportComponent extends StatefulWidget {
+  final List<ProductReport> dataProduct;
+  const ChartReportComponent({super.key, required this.dataProduct});
 
+  @override
+  State<ChartReportComponent> createState() => _ChartReportComponentState();
+}
+
+class _ChartReportComponentState extends State<ChartReportComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,23 +31,23 @@ class ChartReportComponent extends StatelessWidget {
         ],
       ),
       child: SfCartesianChart(
-        primaryXAxis: const NumericAxis(),
+        primaryXAxis: const CategoryAxis(),
         primaryYAxis:
             const NumericAxis(minimum: 0, maximum: 1000, interval: 250),
-        series: <LineSeries<ChartData, int>>[
-          LineSeries<ChartData, int>(
-            dataSource: DataDummy.chartData,
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.stockIn,
+        series: <LineSeries<ProductReport, String>>[
+          LineSeries<ProductReport, String>(
+            dataSource: widget.dataProduct,
+            xValueMapper: (ProductReport data, _) => data.name,
+            yValueMapper: (ProductReport data, _) => data.reports[0].stockIn,
             color: Colors.green,
             markerSettings:
                 const MarkerSettings(isVisible: true, color: Colors.green),
             name: 'Stock In',
           ),
-          LineSeries<ChartData, int>(
-            dataSource: DataDummy.chartData,
-            xValueMapper: (ChartData data, _) => data.x,
-            yValueMapper: (ChartData data, _) => data.stockOut,
+          LineSeries<ProductReport, String>(
+            dataSource: widget.dataProduct,
+            xValueMapper: (ProductReport data, _) => data.name,
+            yValueMapper: (ProductReport data, _) => data.reports[0].stockOut,
             color: Colors.pink,
             markerSettings:
                 const MarkerSettings(isVisible: true, color: Colors.pink),

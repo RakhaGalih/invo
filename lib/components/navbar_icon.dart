@@ -29,6 +29,7 @@ class NavBarIcon extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: (isActive) ? color : kWhite.withOpacity(0),

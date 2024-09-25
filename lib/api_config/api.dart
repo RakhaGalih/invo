@@ -23,6 +23,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/loginModel.dart';
+import '../model/reportModel.dart';
 
 class Api {
   Future<LoginModel> getLogin(
@@ -284,6 +285,32 @@ class Api {
     print("RES DETAIL PRODUCT: ${res.body}");
     if (res.statusCode == 200) {
       return DetailBarCodeModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<ReportModel> getReports(
+      {required String token,
+      required String createdAfter,
+      required String createdBefore}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print(
+        "URL REPORT: ${Url.baseUrl}${Url.reports}?createdAfter=$createdAfter&createdBefore=$createdBefore");
+    final res = await http
+        .get(
+            Uri.parse(
+                "${Url.baseUrl}${Url.reports}?createdAfter=$createdAfter&createdBefore=$createdBefore"),
+            headers: headers)
+        .timeout(const Duration(seconds: 20));
+    print("STATUS CODE(REPORT): ${res.statusCode}");
+    print("RES REPORT: ${res.body}");
+    if (res.statusCode == 200) {
+      return ReportModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

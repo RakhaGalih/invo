@@ -45,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
       DataDummy.countries.firstWhere((country) => country.office == "Jakarta");
   String selectedOffice = "Jakarta";
 
-  Future _imageService(BuildContext context) async {
+  Future _takePictureGallery(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     XFile? pickedImage;
 
@@ -56,9 +56,41 @@ class _EditProfileState extends State<EditProfile> {
           preferredCameraDevice: CameraDevice.rear);
 
       if (pickedImage != null) {
-        print("PATH: ${File(pickedImage.path)}");
-        print("TYPE: ${File(pickedImage.mimeType.toString())}");
-        print("NAME: ${File(pickedImage.name.toString())}");
+        print("PATH: " + File(pickedImage.path).toString());
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
+        setState(() {
+          profileImg = File(pickedImage!.path);
+          print(profileImg);
+        });
+      } else {
+        Navigator.pop(context);
+        await ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("No image was selected"),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+      print("error");
+    }
+  }
+
+  Future _takePictureCamera(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    XFile? pickedImage;
+
+    try {
+      pickedImage = await picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 50,
+          preferredCameraDevice: CameraDevice.front);
+
+      if (pickedImage != null) {
+        print("PATH: " + File(pickedImage.path).toString());
+        print("TYPE: " + File(pickedImage.mimeType.toString()).toString());
+        print("NAME: " + File(pickedImage.name.toString()).toString());
         setState(() {
           profileImg = File(pickedImage!.path);
           print(profileImg);
@@ -225,9 +257,8 @@ class _EditProfileState extends State<EditProfile> {
                                             shape: BoxShape.circle,
                                             color: kGrey),
                                         child: GestureDetector(
-                                            onTap: () async {
-                                              await _imageService(context);
-                                              setState(() {});
+                                            onTap: () {
+                                              showOptionImg();
                                             },
                                             child: const Icon(Icons.edit)),
                                       ),
@@ -359,5 +390,33 @@ class _EditProfileState extends State<EditProfile> {
             _isLoad ? const LoadingAnimation() : Container(),
           ],
         ));
+  }
+
+  showOptionImg() {
+    return showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.folder),
+                title: const Text('Galeri'),
+                onTap: () {
+                  _takePictureGallery(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  _takePictureCamera(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }

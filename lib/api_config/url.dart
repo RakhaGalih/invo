@@ -9,4 +9,5 @@ class Url {
   static String logout = "/logout";
   static String product = "/products";
   static String detailBarCode = "/products/";
+  static String reports = "/reports";
 }
