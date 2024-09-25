@@ -26,9 +26,11 @@ class DetailProdukLabel extends StatelessWidget {
           const SizedBox(
             width: 4,
           ),
-          Text(
-            label + value,
-            style: kRegularTextStyle.copyWith(fontSize: 12, color: kGreyDarkText),
+          Expanded(
+            child: Text(
+              label + value,
+              style: kRegularTextStyle.copyWith(fontSize: 12, color: kGreyDarkText),
+            ),
           )
         ],
       ),

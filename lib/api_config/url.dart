@@ -8,4 +8,5 @@ class Url {
   static String updateUser = "/users/";
   static String logout = "/logout";
   static String product = "/products";
+  static String detailBarCode = "/products/";
 }

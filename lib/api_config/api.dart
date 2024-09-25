@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:invo/api_config/url.dart';
 import 'package:invo/model/addProductModel.dart';
+import 'package:invo/model/detailBarCodeModel.dart';
+import 'package:invo/model/detailBarCodeModel.dart';
 import 'package:invo/model/logoutModel.dart';
 import 'package:invo/model/logoutModel.dart';
 import 'package:invo/model/productModel.dart';
@@ -264,6 +266,27 @@ class Api {
     } else {
       print(response.statusCode);
       throw HttpException('request error code ${response.statusCode}');
+    }
+  }
+
+  Future<DetailBarCodeModel> getDetailBarCode(
+      {required String token, required String code}) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    print("URL DETAIL PRODUCT: ${Url.baseUrl}${Url.detailBarCode}$code");
+    final res = await http
+        .get(Uri.parse(Url.baseUrl + Url.detailBarCode + code),
+            headers: headers)
+        .timeout(const Duration(seconds: 20));
+    print("STATUS CODE(DETAIL PRODUCT): ${res.statusCode}");
+    print("RES DETAIL PRODUCT: ${res.body}");
+    if (res.statusCode == 200) {
+      return DetailBarCodeModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
     }
   }
 }

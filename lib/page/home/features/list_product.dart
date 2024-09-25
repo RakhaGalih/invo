@@ -17,6 +17,7 @@ import '../../../components/alert_dialog.dart';
 import '../../../database/db/productDB.dart';
 import '../../../model/dummy/product.dart';
 import '../../../model/productModel.dart';
+import '../../../model/refreshModel.dart';
 import 'detail_produk.dart';
 
 class ListProductPage extends StatefulWidget {
@@ -37,6 +38,8 @@ class _ListProductPageState extends State<ListProductPage> {
       setState(() {
         _isLoad = true;
       });
+      RefreshModel refresh = await Api().doRefresh();
+      await pref.setString('token_user', refresh.accessToken);
       ProductModel model = await Api()
           .getProduct(token: pref.getString('token_user').toString());
       setState(() {

@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:invo/api_config/url.dart';
 import 'package:invo/components/navbar_icon.dart';
 import 'package:invo/model/constant/constant.dart';
+import 'package:invo/model/detailBarCodeModel.dart';
 import 'package:invo/model/dummy/navicon.dart';
 import 'package:invo/model/provider/data_model.dart';
 import 'package:invo/model/userModel.dart';
+import 'package:invo/page/home/features/detail_barCode.dart';
 import 'package:invo/page/home/homepage.dart';
 import 'package:invo/page/home/profile_page.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,7 @@ import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import '../../api_config/api.dart';
 import '../../components/alert_dialog.dart';
 import '../../components/loading.dart';
+import '../../model/refreshModel.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -165,6 +168,7 @@ class _HomeState extends State<Home> {
                                     scanType: ScanType.barcode,
                                     isShowFlashIcon: true),
                           ));
+                      await searchProduct(res.toString());
                     },
                     child: Container(
                         width: 80,
@@ -198,5 +202,43 @@ class _HomeState extends State<Home> {
         ),
       );
     });
+  }
+
+  Future searchProduct(String code) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        _isLoad = true;
+      });
+      RefreshModel refresh = await Api().doRefresh();
+      await pref.setString('token_user', refresh.accessToken);
+      DetailBarCodeModel model = await Api().getDetailBarCode(
+          token: pref.getString('token_user').toString(), code: code);
+      setState(() {
+        _isLoad = false;
+      });
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DetailBarCodePage(data: model)));
+    } on HttpException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Error', 'Http Exception', 'error');
+    } on SocketException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(
+          context, 'Login Failed', 'No internet connection', 'error');
+    } on TimeoutException {
+      setState(() {
+        _isLoad = false;
+      });
+      return CustomDialog.showAlertDialog(context, 'Timeout',
+          'There seems to be an internet connection error', 'warning');
+    }
   }
 }
