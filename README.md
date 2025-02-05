@@ -5,6 +5,9 @@ Invo is an inventory management application designed to help users manage stock 
 
 Invo utilizes API integration specifically with Express.js, allowing seamless connectivity with other systems and applications. This integration enhances the application's functionality and enables users to streamline their inventory processes even further.
 
+### Powerpoint :
+[Invo PPT.pdf](https://github.com/user-attachments/files/18674157/Invo-2_compressed.pdf)
+
 ### Here's the preview :
 
 UI/UX Showcase
