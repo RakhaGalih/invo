@@ -1,7 +1,9 @@
 # invo
 ### 📦 Simple Inventory Management App 
 
-Invo is an inventory management app designed to make managing product stocks easier. Developed as an internship project under Advanced Software Engineering Laboratory, this app allows users to log in, add new products to their inventory, and track the in-and-out movements of goods in storage. Built using Flutter, Invo features an intuitive and user-friendly interface. Due to the absence of a backend developer in our team, the app is currently available only in its front-end version. I contributed significantly to the UI/UX design and the majority of the coding.
+Invo is an inventory management application designed to help users manage stock efficiently and accurately. With Invo, the recording of incoming and outgoing items is done automatically and in real-time, reducing the potential for human errors that often occur in manual recording. Additionally,
+
+Invo utilizes API integration specifically with Express.js, allowing seamless connectivity with other systems and applications. This integration enhances the application's functionality and enables users to streamline their inventory processes even further.
 
 ### Here's the preview :
 
